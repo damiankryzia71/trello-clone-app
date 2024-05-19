@@ -32,6 +32,10 @@ class Board(models.Model):
             card.add_color_tag(i)
         card.save()
 
+    def archive(self):
+        self.status = "archived"
+        self.save()
+
 
 class Card(models.Model):
     name = models.CharField(max_length = 50)
@@ -52,6 +56,10 @@ class Card(models.Model):
     def move_card(self, board_id):
         board = Board.objects.get(id = board_id)
         self.board = board
+        self.save()
+    
+    def archive(self):
+        self.status = "archived"
         self.save()
 
 class ColorTag(models.Model):

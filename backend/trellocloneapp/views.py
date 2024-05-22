@@ -4,14 +4,14 @@ from django.core.exceptions import ValidationError
 
 #still need to add error handling
 
-#for testing purposes only
-def register_account(request: HttpRequest) -> HttpResponse:
-    username: str = request.GET["username"]
-    password: str = request.GET["password"]
-    email: str = request.GET["email"]
-    account: md.Account = md.Account(username = username, password = password, email = email)
-    account.save()
-    return HttpResponse(200)
+# #for testing purposes only
+# def register_account(request: HttpRequest) -> HttpResponse:
+#     username: str = request.GET["username"]
+#     password: str = request.GET["password"]
+#     email: str = request.GET["email"]
+#     account: md.Account = md.Account(username = username, password = password, email = email)
+#     account.save()
+#     return HttpResponse(200)
 
 #add authentication and error handling
 def create_board(request: HttpRequest) -> HttpResponse:

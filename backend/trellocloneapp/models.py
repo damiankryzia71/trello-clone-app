@@ -1,5 +1,5 @@
 from django.db import models
-from . import validators
+from . import validators as vd
 
 class Account(models.Model):
     username = models.CharField(max_length = 50)
@@ -9,9 +9,9 @@ class Account(models.Model):
     def __str__(self):
         return f"#{self.id}: {self.username}"
     
-    def create_board(self, board_name):
-        board = Board(name = board_name, account = self)
-        board.save()
+    def create_board(self, name: str):
+        board = Board(name = name, account = self, status = "active")
+        return board
 
 
 class Board(models.Model):
@@ -25,17 +25,10 @@ class Board(models.Model):
 
     def __str__(self):
         return f"{self.id}: {self.name}"
-    
-    def create_card(self, card_name: str, color_tags: list[str]):
-        card = Card(name = card_name, board = self)
-        for i in color_tags:
-            card.add_color_tag(i)
-        card.save()
 
-    def archive(self):
-        self.status = "archived"
-        self.save()
-
+    def create_card(self, name: str):
+        card = Card(name = name, board = self, status = "active")
+        return card
 
 class Card(models.Model):
     name = models.CharField(max_length = 50)
@@ -49,21 +42,13 @@ class Card(models.Model):
     def __str__(self):
         return f"{self.id}: {self.name}"
     
-    def add_color_tag(self, color_rgb):
-        color_tag = ColorTag(color=color_rgb, card = self)
-        color_tag.save()
+    def create_color_tag(self, color: str):
+        color_tag = ColorTag(color = color, card = self)
+        return color_tag
     
-    def move_card(self, board_id):
-        board = Board.objects.get(id = board_id)
-        self.board = board
-        self.save()
-    
-    def archive(self):
-        self.status = "archived"
-        self.save()
 
 class ColorTag(models.Model):
-    color = models.CharField(validators = [validators.validate_rgb])
+    color = models.CharField(validators = [vd.validate_rgb])
     card = models.ForeignKey("Card", on_delete = models.CASCADE)
 
     def __str__(self):
